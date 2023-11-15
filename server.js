@@ -1,6 +1,9 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
+const bcrypt = require('bcrypt');
 const app = express();
+
+const saltRounds = 10;
 const PORT = 3001;
 
 const prisma = PrismaClient();
@@ -9,8 +12,14 @@ const prisma = PrismaClient();
 app.post('/api/auth/register', async (req, res) => {
   const { name, email, password } = req.body;
 
-  // TODO: passwordのハッシュ化
-  const user = await prisma.user.create({ data: { name, email, password } });
+  const hashedPassword = await bcrypt.hash(password, saltRounds);
+  const user = await prisma.user.create({
+    data: {
+      name,
+      email,
+      password: hashedPassword,
+    },
+  });
 
   return res.json(user);
 });
