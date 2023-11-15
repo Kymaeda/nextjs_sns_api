@@ -8,6 +8,8 @@ const PORT = 3001;
 
 const prisma = new PrismaClient();
 
+app.use(express.json());
+
 // 新規ユーザ登録API
 app.post('/api/auth/register', async (req, res) => {
   const { name, email, password } = req.body;
