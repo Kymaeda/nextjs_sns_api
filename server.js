@@ -26,4 +26,29 @@ app.post('/api/auth/register', async (req, res) => {
   return res.json(user);
 });
 
+app.post('/api/auth/login', async (req, res) => {
+  const { email, password } = req.body;
+
+  const user = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+  });
+  if (!user) {
+    return res.status(404).json({
+      message: 'アカウントが存在しません。',
+    });
+  }
+
+  const isValidPassword = await bcrypt.compare(password, user.password);
+  if (!isValidPassword) {
+    return res.status(401).json({
+      message: 'メールアドレス、もしくはパスワードが正しくありません。',
+    });
+  }
+
+  // TODO: jwtを使ってトークンを発行する
+  return res.json(user);
+})
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
