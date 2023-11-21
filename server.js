@@ -1,7 +1,10 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const app = express();
+
+require('dotenv').config();
 
 const saltRounds = 10;
 const PORT = 3001;
@@ -47,8 +50,8 @@ app.post('/api/auth/login', async (req, res) => {
     });
   }
 
-  // TODO: jwtを使ってトークンを発行する
-  return res.json(user);
+  const token = await jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
+  return res.json({ token });
 })
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
