@@ -7,6 +7,6 @@ const authRouter = require('./prisma/routers/auth');
 
 app.use(express.json());
 
-app.use(authRouter);
+app.use('/api/auth', authRouter);
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

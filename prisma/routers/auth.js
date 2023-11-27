@@ -9,7 +9,7 @@ const jwt = require('jsonwebtoken');
 const saltRounds = 10;
 
 // 新規ユーザ登録API
-router.post('/api/auth/register', async (req, res) => {
+router.post('/register', async (req, res) => {
   const { name, email, password } = req.body;
 
   const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -25,7 +25,7 @@ router.post('/api/auth/register', async (req, res) => {
 });
 
 // ログインAPI
-router.post('/api/auth/login', async (req, res) => {
+router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   const user = await prisma.user.findUnique({
